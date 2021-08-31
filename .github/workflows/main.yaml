@@ -1,0 +1,41 @@
+name: Check homework
+on: [push]
+jobs:
+  runner-job:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE: 'ktshub/backend-summer-2021:task-0491cb2c-a7e0-4e7d-bcd3-a15fe091a373'
+      CONFIGPATH: /go/code/source/tests/config.yml
+      PYTHONPATH: /go/code/source
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: set project_path
+        run: echo "PROJECTPATH=/home/runner/work/hw-backend-summer-2021-3-db_sql/hw-backend-summer-2021-3-db_sql" >> $GITHUB_ENV
+
+      - name: import db
+        run:  export PGPASSWORD="$POSTGRES_PASSWORD"; psql --host="$POSTGRES_HOST" --port="$POSTGRES_PORT" --username="$POSTGRES_USER" --d="$POSTGRES_DATABASE" < "$PROJECTPATH/tests/data/demo.sql"
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_DATABASE: postgres
+          POSTGRES_PASSWORD: postgres
+
+
+
+      - run: docker run --entrypoint /bin/bash -e GITHUB_REPOSITORY -e GITHUB_REF -e CONFIGPATH=${{ env.CONFIGPATH }} -e PYTHONPATH=${{ env.PYTHONPATH }} --network host --mount src="$(pwd)",target=/go/code/source,type=bind ${{ env.IMAGE }} -c "mv build/main source && ls -lah && cd source && ./main"
+
