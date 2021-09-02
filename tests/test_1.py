@@ -8,6 +8,8 @@ import pytest
 from sql_querys import TASK_1_QUERY, TASK_2_QUERY, TASK_3_QUERY
 import asyncio
 import yaml
+import datetime
+
 
 @dataclass
 class DatabaseConfig:
@@ -56,21 +58,36 @@ async def db(loop, config: DatabaseConfig):
 class TestQuerys:
     @pytest.mark.asyncio
     async def test_query_1(self, db):
-        import logging
-
+        #  flight_no | duration
+        # -----------+----------
+        #  PG0235    | 00:25:00
+        #  PG0234    | 00:25:00
+        #  PG0233    | 00:25:00
+        #  PG0235    | 00:25:00
+        #  PG0234    | 00:25:00
         res = await db.all(db.text(TASK_1_QUERY))
-        logging.warning(res)
+        assert res == [
+            ("PG0235", datetime.timedelta(seconds=1500)),
+            ("PG0234", datetime.timedelta(seconds=1500)),
+            ("PG0233", datetime.timedelta(seconds=1500)),
+            ("PG0235", datetime.timedelta(seconds=1500)),
+            ("PG0234", datetime.timedelta(seconds=1500)),
+        ]
 
     @pytest.mark.asyncio
     async def test_query_2(self, db):
-        import logging
-
+        #  flight_no | count
+        # -----------+-------
+        #  PG0260    |    27
+        #  PG0371    |    27
+        #  PG0310    |    27
         res = await db.all(db.text(TASK_2_QUERY))
-        logging.warning(res)
+        assert res == [("PG0260", 27), ("PG0371", 27), ("PG0310", 27)]
 
     @pytest.mark.asyncio
     async def test_query_3(self, db):
-        import logging
-
-        res = await db.all(db.text(TASK_3_QUERY))
-        logging.warning(res)
+        #  count
+        # --------
+        #  16824
+        res = await db.scalar(db.text(TASK_3_QUERY))
+        assert res == 16824
