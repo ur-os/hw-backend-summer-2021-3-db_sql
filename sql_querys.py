@@ -1,8 +1,12 @@
 # INFO
 # Вывести топ 5 самых коротких по длительности перелетов
 # В ответе должно быть 2 колонки [flight_no, duration]
-TASK_1_QUERY = """
-"""
+TASK_1_QUERY = ''
+'SELECT flight_no, (actual_arrival - actual_departure) AS duration'
+'FROM flights'
+'ORDER BY duration'
+'LIMIT 5'
+
 #  flight_no | duration 
 # -----------+----------
 #  PG0235    | 00:25:00
