@@ -23,14 +23,21 @@ TASK_1_QUERY = 'SELECT flight_no, duration ' \
 # количество упоминаний которых меньше 50
 # В ответе должно быть 2 колонки [flight_no, count]
 TASK_2_QUERY = """
-SELECT flight_no, duration
-               FROM (
-                   SELECT flight_no, SUM(flight_no) AS 'count'
-                   FROM flights
-               ) as one
-               WHERE  'count' IS NOT NULL
-               ORDER BY duration LIMIT 5
+ SELECT flight_no , qwer as "count"
+                FROM (
+                    SELECT flight_no, COUNT(flight_no) AS qwer 
+                    FROM flights 
+                    GROUP BY flight_no
+                    ) as one
+                WHERE  qwer < 50
+                ORDER BY qwer DESC
+                LIMIT 3
 """
+
+
+
+
+
 #  flight_no | count 
 # -----------+-------
 #  PG0260    |    27
