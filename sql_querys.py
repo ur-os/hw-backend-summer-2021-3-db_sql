@@ -38,7 +38,7 @@ TASK_2_QUERY = """
 
 
 
-#  flight_no | count 
+#  flight_no | count
 # -----------+-------
 #  PG0260    |    27
 #  PG0371    |    27
