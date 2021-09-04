@@ -24,14 +24,14 @@ TASK_1_QUERY = 'SELECT flight_no, duration ' \
 # В ответе должно быть 2 колонки [flight_no, count]
 TASK_2_QUERY = """
  SELECT flight_no , qwer as "count"
-                FROM (
-                    SELECT flight_no, COUNT(flight_no) AS qwer 
-                    FROM flights 
-                    GROUP BY flight_no
-                    ) as one
-                WHERE  qwer < 50
-                ORDER BY qwer DESC
-                LIMIT 3
+        FROM (
+            SELECT flight_no, COUNT(flight_no) AS qwer 
+            FROM flights 
+            GROUP BY flight_no
+            ) as one
+        WHERE  qwer < 50
+        ORDER BY qwer DESC
+        LIMIT 3
 """
 
 
@@ -48,6 +48,14 @@ TASK_2_QUERY = """
 # Вывести число перелетов внутри одной таймзоны 
 # Нузно вывести 1 значение в колонке count
 TASK_3_QUERY = """
+SELECT COUNT(flight_no) AS "count"
+FROM(
+    SELECT flight_no, a_arival.timezone , a_departure.timezone
+    FROM flights AS f
+    FULL OUTER JOIN airports_data AS a_arival ON a_arival.airport_code = f.arrival_airport
+    FULL OUTER JOIN airports_data AS a_departure ON a_departure.airport_code = f.departure_airport
+    WHERE a_arival.timezone LIKE a_departure.timezone
+ ) AS same_timezones
 """
 #  count  
 # --------
