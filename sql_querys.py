@@ -2,7 +2,7 @@
 # Вывести топ 5 самых коротких по длительности перелетов
 # В ответе должно быть 2 колонки [flight_no, duration]
 TASK_1_QUERY = ''
-'SELECT flight_no, (actual_arrival - actual_departure) AS duration'
+'SELECT flight_no, to_char((actual_arrival - actual_departure), \'HH24:MI:SS\') AS duration'
 'FROM flights'
 'ORDER BY duration'
 'LIMIT 5'
